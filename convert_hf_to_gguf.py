@@ -8,11 +8,11 @@ base_model_name="microsoft/Phi-3-mini-4k-instruct"
 hf_model_id="bertilmuth/phi"
 
 # Download the model from Huggingface
-snapshot_download(repo_id=hf_model_id, local_dir="hf_model", revision="main")
+snapshot_download(repo_id=hf_model_id, local_dir="phi-3", revision="main")
 
 # Convert the model to GGUF format, 
 # using an adapted version of convert-hf-to-gguf.py (of llama.cpp)
-convert_hf_to_gguf.convert_model("hf_model", "model.gguf")
+convert_hf_to_gguf.convert_model("phi-3", "phi-3.gguf")
   
 
   
