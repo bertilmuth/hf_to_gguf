@@ -19,14 +19,13 @@ snapshot_download(repo_id=hf_model_id, local_dir=local_hf_model_path, revision="
 script_path = "scripts/llama.cpp/convert-hf-to-gguf.py"
 hf_model_name = extractModelName(hf_model_id)
 local_gguf_model_path = f"gguf_models/{hf_model_id}/{hf_model_name}.gguf"
-command = ["python", script_path, "--outfile", f"{hf_model_name}.gguf", "--outtype", "f16", local_hf_model_path]
+command = ["python", script_path, "--outfile", local_gguf_model_path, "--outtype", "f16", local_hf_model_path]
   
 result = subprocess.run(command, capture_output=True, text=True)
 
 # Print the output of the script
-print("STDOUT:", result.stdout)
-print("STDERR:", result.stderr)
-print("Return code:", result.returncode)
+print(result.stdout)
+print(result.stderr)
 
 
   
