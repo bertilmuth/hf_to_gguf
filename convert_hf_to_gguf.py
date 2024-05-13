@@ -1,3 +1,10 @@
+def extractModelName(hf_model_id):
+    parts = hf_model_id.split('/', 1)
+    if len(parts) > 1:
+        return parts[1]
+    else:
+        raise ValueError("Invalid huggingface model id: " + hf_model_id)
+
 from huggingface_hub import snapshot_download
 import subprocess
 
@@ -21,12 +28,7 @@ print("STDOUT:", result.stdout)
 print("STDERR:", result.stderr)
 print("Return code:", result.returncode)
 
-def extractModelName(hf_model_id):
-    parts = hf_model_id.split('/', 1)
-    if len(parts) > 1:
-        return parts[1]
-    else:
-        raise ValueError("Invalid huggingface model id: " + hf_model_id)
+
   
 
 
