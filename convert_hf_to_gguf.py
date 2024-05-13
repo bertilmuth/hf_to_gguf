@@ -1,20 +1,24 @@
-from llmtuner.chat import ChatModel
-from llmtuner.extras.misc import torch_gc
 from huggingface_hub import snapshot_download
-from scripts.llama_cpp import convert_hf_to_gguf
-import argparse
+import subprocess
 
 base_model_name="microsoft/Phi-3-mini-4k-instruct"
+hf_model_name = "phi"
 hf_model_id="bertilmuth/phi"
 
 # Download the model from Huggingface
-snapshot_download(repo_id=hf_model_id, local_dir="phi-3", revision="main")
+snapshot_download(repo_id=hf_model_id, local_dir=hf_model_name, revision="main")
 
 # Convert the model to GGUF format, 
 # using an adapted version of convert-hf-to-gguf.py (of llama.cpp)
-convert_hf_to_gguf.convert_model("phi-3", "phi-3.gguf")
+script_path = "scripts/llama.cpp/convert-hf-to-gguf.py"
+command = ["python", script_path, "--outfile", f"{hf_model_name}.gguf", "--outtype", "f16", hf_model_name]
   
+result = subprocess.run(command, capture_output=True, text=True)
 
+# Print the output of the script
+print("STDOUT:", result.stdout)
+print("STDERR:", result.stderr)
+print("Return code:", result.returncode)
   
 
 
