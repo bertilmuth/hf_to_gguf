@@ -14,6 +14,6 @@ if "%CONDA_DEFAULT_ENV%"=="__convert_hf_to_gguf__" (
 )
 
 git clone https://github.com/ggerganov/llama.cpp scripts/llama.cpp >nul 2>&1
-pip install -q -r scripts/llama.cpp/requirements.txt
-pip install -q llmtuner
+pip install -r scripts/llama.cpp/requirements.txt
+pip install llmtuner
 
