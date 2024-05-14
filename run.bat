@@ -1,7 +1,7 @@
 @echo off
 
 if "%~1"=="" (
-    echo Usage: %0 <Hugging Face model ID>
+    echo Usage: %0 huggingface_model_id
     exit /b 1
 )
 
