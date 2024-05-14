@@ -20,14 +20,14 @@ def main():
     create_directory_if_not_exists(gguf_model_directory_path)
 
     # Convert the model to GGUF format, using llama.cpp
-    local_gguf_source_model_root_path = f"{gguf_model_directory_path}/{hf_model_name}.gguf"
+    gguf_model_path = f"{gguf_model_directory_path}/{hf_model_name}.gguf"
     converter = ["python", "scripts/llama.cpp/convert-hf-to-gguf.py", 
-               "--outfile", local_gguf_source_model_root_path, "--outtype", "f16", local_hf_source_model_root_path]
+               "--outfile", gguf_model_path, "--outtype", "f16", local_hf_source_model_root_path]
     run(converter)
     
     # Automatically install 
-    if directory_exists(local_gguf_source_model_root_path):
-      install_to_lmstudio(local_gguf_source_model_root_path)
+    if directory_exists(gguf_model_directory_path):
+      install_to_lmstudio(gguf_model_directory_path)
 
 def extractModelName(hf_model_id):
     parts = hf_model_id.split('/', 1)
