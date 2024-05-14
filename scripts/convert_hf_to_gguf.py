@@ -1,7 +1,6 @@
-import argparse
-import os
+import os, argparse, subprocess, shutil
+from pathlib import Path
 from huggingface_hub import snapshot_download
-import subprocess
 
 def main():
     # Process the command line arguments
@@ -12,8 +11,8 @@ def main():
     hf_model_id = args.hf_model_id
     
     # Download the model from Hugging Face
-    local_hf_model_path = f"hf_models/{hf_model_id}"
-    snapshot_download(repo_id=hf_model_id, local_dir=local_hf_model_path, revision="main")
+    local_hf_source_model_root_path = f"hf_models/{hf_model_id}"
+    snapshot_download(repo_id=hf_model_id, local_dir=local_hf_source_model_root_path, revision="main")
 
     # Define variables & create GGUF model directory
     hf_model_name = extractModelName(hf_model_id)
@@ -21,10 +20,14 @@ def main():
     create_directory_if_not_exists(gguf_model_directory_path)
 
     # Convert the model to GGUF format, using llama.cpp
-    local_gguf_model_path = f"{gguf_model_directory_path}/{hf_model_name}.gguf"
+    local_gguf_source_model_root_path = f"{gguf_model_directory_path}/{hf_model_name}.gguf"
     converter = ["python", "scripts/llama.cpp/convert-hf-to-gguf.py", 
-               "--outfile", local_gguf_model_path, "--outtype", "f16", local_hf_model_path]
+               "--outfile", local_gguf_source_model_root_path, "--outtype", "f16", local_hf_source_model_root_path]
     run(converter)
+    
+    # Automatically install 
+    if directory_exists(local_gguf_source_model_root_path):
+      install_to_lmstudio(local_gguf_source_model_root_path)
 
 def extractModelName(hf_model_id):
     parts = hf_model_id.split('/', 1)
@@ -34,13 +37,29 @@ def extractModelName(hf_model_id):
         raise ValueError("Invalid Hugging Face model id: " + hf_model_id)
 
 def create_directory_if_not_exists(directory_path):
-    if not os.path.exists(directory_path):
+    if not directory_exists(directory_path):
         os.makedirs(directory_path)
+
+def directory_exists(directory_path):
+    return os.path.exists(directory_path)
 
 def run(commandline_command):
     result = subprocess.run(commandline_command, capture_output=True, text=True)
     print(result.stdout)
     print(result.stderr)
+    
+def install_to_lmstudio(source_model_root_path)
+    user_home_dir = Path.home()
+    lmstudio_models_dir = user_home_dir / '.cache' / 'lm-studio' / 'models'
+    
+    if not directory_exists(lmstudio_models_dir):
+      return
+
+    source_dir = Path(source_model_root_path)
+    
+    shutil.copytree(source_dir, lmstudio_models_dir)
+    print(f"All files from {source_dir} have been copied to {lmstudio_models_dir}")
+
 
 if __name__ == '__main__':
     main()
