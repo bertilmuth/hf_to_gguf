@@ -11,9 +11,6 @@ def main():
 
     hf_model_id = args.hf_model_id
     
-    # Install the dependencies, if they haven't been installed already
-    install_dependencies_if_needed()
-    
     # Download the model from Hugging Face
     local_hf_model_path = f"hf_models/{hf_model_id}"
     snapshot_download(repo_id=hf_model_id, local_dir=local_hf_model_path, revision="main")
@@ -28,15 +25,6 @@ def main():
     converter = ["python", "scripts/llama.cpp/convert-hf-to-gguf.py", 
                "--outfile", local_gguf_model_path, "--outtype", "f16", local_hf_model_path]
     run(converter)
-
-def install_dependencies_if_needed():
-    try:
-        __import__(llmtuner)
-        return True
-    except ImportError:
-        # Call the setup script so that all dependencies are installed
-        
-        return False
 
 def extractModelName(hf_model_id):
     parts = hf_model_id.split('/', 1)
