@@ -58,7 +58,7 @@ def install_to_lmstudio(source_model_root_path)
     source_dir = Path(source_model_root_path)
     
     shutil.copytree(source_dir, lmstudio_models_dir)
-    print(f"All files from {source_dir} have been copied to {lmstudio_models_dir}")
+    print(f"All files from {source_model_root_path} have been copied to {lmstudio_models_dir}")
 
 
 if __name__ == '__main__':
