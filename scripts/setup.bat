@@ -1,6 +1,6 @@
 :: Run the script (in the current directory) 
 :: to setup the conda environment if needed
-call "%~dp0setup_conda.bat" __convert_hf_to_gguf__
+call "scripts/setup_conda.bat" __convert_hf_to_gguf__
 
 :: Activate the environment
 call conda activate __convert_hf_to_gguf__
