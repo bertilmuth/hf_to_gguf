@@ -4,12 +4,16 @@ from huggingface_hub import snapshot_download
 import subprocess
 
 def main():
+    # Process the command line arguments
     parser = argparse.ArgumentParser(description='Process a model ID for Hugging Face.')
     parser.add_argument('hf_model_id', type=str, help='The Hugging Face model ID')
     args = parser.parse_args()
 
     hf_model_id = args.hf_model_id
-
+    
+    # Install the dependencies, if they haven't been installed already
+    install_dependencies_if_needed()
+    
     # Download the model from Hugging Face
     local_hf_model_path = f"hf_models/{hf_model_id}"
     snapshot_download(repo_id=hf_model_id, local_dir=local_hf_model_path, revision="main")
@@ -21,14 +25,18 @@ def main():
 
     # Convert the model to GGUF format, using llama.cpp
     local_gguf_model_path = f"{gguf_model_directory_path}/{hf_model_name}.gguf"
-    command = ["python", "scripts/llama.cpp/convert-hf-to-gguf.py", 
+    converter = ["python", "scripts/llama.cpp/convert-hf-to-gguf.py", 
                "--outfile", local_gguf_model_path, "--outtype", "f16", local_hf_model_path]
-  
-    result = subprocess.run(command, capture_output=True, text=True)
+    run(converter)
 
-    # Print the output of the script
-    print(result.stdout)
-    print(result.stderr)
+def install_dependencies_if_needed():
+    try:
+        __import__(llmtuner)
+        return True
+    except ImportError:
+        # Call the setup script so that all dependencies are installed
+        
+        return False
 
 def extractModelName(hf_model_id):
     parts = hf_model_id.split('/', 1)
@@ -40,6 +48,11 @@ def extractModelName(hf_model_id):
 def create_directory_if_not_exists(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
+
+def run(commandline_command):
+    subprocess.run(commandline_command, capture_output=True, text=True)
+    print(result.stdout)
+    print(result.stderr)
 
 if __name__ == '__main__':
     main()
