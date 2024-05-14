@@ -38,7 +38,7 @@ def create_directory_if_not_exists(directory_path):
         os.makedirs(directory_path)
 
 def run(commandline_command):
-    subprocess.run(commandline_command, capture_output=True, text=True)
+    result = subprocess.run(commandline_command, capture_output=True, text=True)
     print(result.stdout)
     print(result.stderr)
 
