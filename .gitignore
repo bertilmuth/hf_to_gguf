@@ -1,0 +1,4 @@
+# Ignore scripts/llama.cpp directory and all its contents
+scripts/llama.cpp/
+hf_models/
+gguf_models/
