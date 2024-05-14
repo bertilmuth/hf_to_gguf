@@ -8,7 +8,9 @@ if "%~1"=="" (
 set "HF_MODEL_ID=%~1"
 
 :: Perform setup if necessary
-call ./scripts/setup.bat
+IF NOT EXIST "gguf_models" (
+    call ./scripts/setup.bat
+)
 
 :: Activate the conda environment for all the Python libraries
 call conda activate __convert_hf_to_gguf__
