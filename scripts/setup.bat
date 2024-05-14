@@ -7,12 +7,13 @@ call conda activate __convert_hf_to_gguf__
 
 :: Verify the activation
 if "%CONDA_DEFAULT_ENV%"=="__convert_hf_to_gguf__" (
-    echo Conda environment activated.
+    echo INFO: Conda environment activated.
 ) else (
-    echo Failed to activate conda environment.
+    echo ERROR: Failed to activate conda environment.
+    exit /b 1
 )
 
 git clone https://github.com/ggerganov/llama.cpp scripts/llama.cpp >nul 2>&1
-pip install -r scripts/llama.cpp/requirements.txt
-pip install llmtuner
+pip install -q -r scripts/llama.cpp/requirements.txt
+pip install -q llmtuner
 
