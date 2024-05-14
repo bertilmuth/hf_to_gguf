@@ -48,7 +48,7 @@ def run(commandline_command):
     print(result.stdout)
     print(result.stderr)
     
-def install_to_lmstudio(source_model_root_path)
+def install_to_lmstudio(source_model_root_path):
     user_home_dir = Path.home()
     lmstudio_models_dir = user_home_dir / '.cache' / 'lm-studio' / 'models'
     
